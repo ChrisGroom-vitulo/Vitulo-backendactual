@@ -1,41 +1,18 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app import auth
-from app.database import SessionLocal, engine
-from app.models import User
-from app.database import Base
-from passlib.hash import bcrypt
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-app = FastAPI()
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
-# Create tables
-Base.metadata.create_all(bind=engine)
-
-# Allow CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 
-app.include_router(auth.router, prefix="/auth")
-
-@app.get("/")
-def read_root():
-    return {"message": "Vitulo Backend is running"}
-
-# Create default admin user if not present
-def create_default_admin():
+def get_db():
     db = SessionLocal()
-    user = db.query(User).filter(User.username == "admin").first()
-    if not user:
-        admin = User(username="admin", hashed_password=bcrypt.hash("admin123"), role="admin")
-        db.add(admin)
-        db.commit()
-        print("✅ Default admin created: admin / admin123")
-    db.close()
-
-create_default_admin()
-```
+    try:
+        yield db
+    finally:
+        db.close()
