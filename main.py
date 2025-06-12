@@ -14,13 +14,13 @@ app.add_middleware(
 )
 
 # Register routers
-app.include_router(auth.router)
-app.include_router(upload.router)
-app.include_router(reports.router)
-app.include_router(mapping.router)
-app.include_router(kill_data.router)
-app.include_router(payments.router)
-app.include_router(cts_integration.router)
+app.include_router(auth.router, prefix="/auth")
+app.include_router(upload.router, prefix="/upload")
+app.include_router(reports.router, prefix="/reports")
+app.include_router(mapping.router, prefix="/mapping")
+app.include_router(kill_data.router, prefix="/kill")
+app.include_router(payments.router, prefix="/payments")
+app.include_router(cts_integration.router, prefix="/cts")
 
 @app.get("/")
 def read_root():
