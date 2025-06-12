@@ -7,3 +7,6 @@ passlib[bcrypt]
 pandas
 fpdf
 python-dotenv
+sqlalchemy
+alembic
+
