@@ -1,8 +1,11 @@
-# app/auth.py
-from fastapi import APIRouter
+
+from fastapi import APIRouter, HTTPException
+from app.schemas import LoginSchema, TokenSchema
 
 router = APIRouter()
 
-@router.get("/auth/test")
-def test_auth():
-    return {"message": "Auth router is working"}
+@router.post("/login", response_model=TokenSchema)
+def login(payload: LoginSchema):
+    if payload.username == "admin" and payload.password == "password":
+        return {"access_token": "admin-token", "token_type": "bearer"}
+    raise HTTPException(status_code=401, detail="Invalid credentials")
