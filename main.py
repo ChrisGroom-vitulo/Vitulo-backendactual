@@ -38,4 +38,3 @@ def create_default_admin():
     db.close()
 
 create_default_admin()
-```
