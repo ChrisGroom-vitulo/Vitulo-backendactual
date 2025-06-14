@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models import User
 from app.schemas import LoginSchema, TokenSchema
 from passlib.hash import bcrypt
-import jwt
+from jose import jwt
 
 SECRET_KEY = "your-secret-key"
 
